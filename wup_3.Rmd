@@ -1,7 +1,7 @@
 ---
 title: "Alcohol vs Seat choice"
-author: "Your Name"
-date: "Fall 2020"
+author: "Taelynn Condoll"
+date: "Summer 2022"
 output: html_document
 ---
 
@@ -14,31 +14,52 @@ require(tidyverse)
 require(tigerstats)
 davisdata <- read.csv(file="UCDavis.csv")
 ```
+
 ## Our Goal is to answer this question Is there a difference between the alcohol consumed between the row
+
 ## you choose to sit in??
+
+$H_0$: There is no difference between the average number of drinks imbibed between people conditioned on the row they sit in.
+
+$H_A$: The average number drinks is different between at least two rows.  
 
 ## Now with ggplot - first select the basic data
 
 ```{r}
 basicCN <- ggplot(davisdata,aes(y=alcohol,x=Seat))
 ```
+
 ## Now add in boxplot
 
 ```{r}
 basicCN + geom_boxplot()
 ```
-  
-  
-### get fancy  
+ 
+ It looks like there is a correlation between the place someone sits and how much alcohol they've had. It looks like you tend to sit futher back if youve had more to drink. the less someone had drank, the closer they sit.
+
+### get fancy 
 
 ```{r}
 basicCN + geom_boxplot(notch=TRUE,outlier.color = "red") + stat_boxplot(geom ='errorbar') + labs(title="Fancy notch boxplot \n with 2 lines")
 ```
+It looks like there is a correlation between the place someone sits and how much alcohol they've had. It looks like you tend to sit futher back if youve had more to drink.
 
-## Numerical Summarys 
+## Numerical Summarys
+
+```{r}
+favstats(alcohol~Seat,data=davisdata)
+```
+
+There does seem to be a correlation between sitting location and alcohol consumption. The more you've drank, the farther you sit far away.
 
 ## Inferential Tests
+```{r}
+model.1 <- lm(alcohol~Seat,data=davisdata)
+summary.lm(model.1)
+```
+
+The p value is smaller then0.05 therefore we reject the null hypothisis.
 
 ## Conclusions
 
-
+There's a correlation between alcohol consumption and sitting location. We rejected the null hypothesis of "There is no difference between the average number of drinks imbibed between people conditioned on the row they sit in" because there is a clear difference in seating preference and how much alcohol has been consumed.
